@@ -1,0 +1,5 @@
+ollama
+requests
+playwright
+python-dotenv
+flask
