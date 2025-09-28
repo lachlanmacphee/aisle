@@ -8,7 +8,7 @@ from ollama import ChatResponse
 from flask import Flask, request, jsonify
 
 
-def Aisle():
+def aisle():
     load_dotenv()
     app = Flask(__name__)
     database = db.Database()
@@ -153,5 +153,5 @@ def Aisle():
 
 
 if __name__ == "__main__":
-    app = Aisle()
+    app = aisle()
     app.run(debug=True, host=c.HOST, port=c.PORT)

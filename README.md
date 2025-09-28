@@ -1,6 +1,6 @@
-# Aisle - Automated Grocery Ordering
+# aisle - Automated Grocery Ordering
 
-Aisle provides an HTTP server for ordering groceries from your supermarket, with HTTP endpoints for 2FA handling and shopping list submission. Currently, only Woolworths in Australia is supported, but the architecture allows for easy addition of other supermarkets if you wish to contribute another.
+aisle provides an HTTP server for ordering groceries from your supermarket, with HTTP endpoints for 2FA handling and shopping list submission. Currently, only Woolworths in Australia is supported, but the architecture allows for easy addition of other supermarkets if you wish to contribute another.
 
 ## Features
 
@@ -100,7 +100,7 @@ Once you've submitted a shopping list via the `/order` endpoint:
 
 1. **Login**: Using your credentials, the browser (running in the background) will log into Woolworths. If 2FA is required, it waits for a valid 2FA code to be submitted via the `/submit-2fa` endpoint.
 
-2. **Product Matching**: Aisle uses multiple strategies in the following order to match shopping list items to products:
+2. **Product Matching**: aisle uses multiple strategies in the following order to match shopping list items to products:
 
    - Exact name matching
    - Previous order history
