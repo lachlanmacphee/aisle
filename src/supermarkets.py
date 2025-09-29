@@ -130,15 +130,14 @@ class Woolworths(Supermarket):
                 if self.database:
                     twofa_code = self.database.get_latest_2fa_code()
 
-                if twofa_code:
-                    await page.fill('input[type="text"]', twofa_code)
-                    await page.click('button[type="submit"]')
-                    await page.wait_for_timeout(10000)
-                else:
-                    print(
-                        "No 2FA code available. Please submit a 2FA message via the endpoint"
+                if not twofa_code:
+                    twofa_code = input(
+                        "Couldn't find 2FA code. Please type it manually and press Enter: "
                     )
-                    exit()
+
+                await page.fill('input[type="text"]', twofa_code)
+                await page.click('button[type="submit"]')
+                await page.wait_for_timeout(10000)
 
                 for _, product in order.items():
                     stockcode = product["stockcode"]
@@ -150,16 +149,14 @@ class Woolworths(Supermarket):
                     await page.goto(product_url)
                     await page.wait_for_load_state("networkidle")
 
-                    added = False
                     selector = 'button[class="add-to-cart-btn"]'
-                    try:
-                        await page.click(selector)
-                        added = True
-                    except:
+                    is_out_of_stock = await page.locator(selector).first.is_disabled()
+                    if is_out_of_stock:
+                        print(f"Product {product_name} is out of stock")
                         continue
-
-                    if not added:
-                        print(f"Could not find add to cart button for {product_name}")
+                    else:
+                        print(f"Adding {product_name} to cart")
+                        await page.locator(selector).first.click()
 
                 # Click the cart button to open the drawer
                 selector = "#header-view-cart-button"
@@ -192,6 +189,15 @@ class Woolworths(Supermarket):
                         raise Exception("No delivery time slots available")
 
                 await page.wait_for_timeout(5000)
+
+                # Sometimes we might get the forgotten page again
+                # (or for the first time if the drawer was shown previously)
+                forgotten_page = await page.get_by_text(
+                    "Have You Forgotten?"
+                ).is_visible()
+                if forgotten_page:
+                    await page.click(".continue-button")
+                    await page.wait_for_timeout(5000)
 
                 await page.fill('input[name="txt-cvv_csv"]', self.auth["cvv"])
                 await page.click('button[type="submit"]')
