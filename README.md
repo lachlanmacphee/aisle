@@ -11,10 +11,12 @@ aisle provides an HTTP server for ordering groceries from your supermarket, with
 
 ## Roadmap
 
-- [ ] Still seems to add products to cart that are out of stock (search api may not have stock info, might have to loop them through again?)
-- [ ] Shipping preferences in checkout
+- [ ] If an OOS item is found, hit the search API for alternatives and keep trying to find one that's in stock until all options are exhausted.
+- [ ] Allow inputting shipping time preferences (eg the day and morning/arvo/evening).
 - [ ] Home Assistant integration to source the shopping list, trigger orders, and check delivery status
-- [ ] Switch away from Ollama to a hosted LLM solution (e.g. OpenRouter, LiteLLM proxy)
+- [ ] Switch away from Ollama to a hosted LLM solution (e.g. OpenRouter, LiteLLM proxy) for more reliable product decisions
+- [ ] Turn it into an MCP server for usage by LLMs
+- [ ] Add support for more supermarkets (e.g. Coles, Aldi)
 
 ## Setup
 
