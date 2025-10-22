@@ -220,7 +220,25 @@ class Woolworths(Supermarket):
                     # Ignore if the button is not found
                     pass
 
-                await page.fill('input[name="txt-cvv_csv"]', self.auth["cvv"])
+                await page.wait_for_timeout(5000)
+
+                # Click the button with the class shopper-action if it exists
+                try:
+                    await page.click(".shopper-action")
+                    await page.wait_for_timeout(2000)
+                except Exception:
+                    print("No shopper-action button found, proceeding to payment")
+                    pass
+
+                # Click the button with ID payListItem4 to select credit card payment
+                try:
+                    await page.click("#digitalPayListItem4")
+                    await page.wait_for_timeout(2000)
+                except Exception:
+                    print("Credit card payment option not found, proceeding")
+                    pass
+
+                await page.fill("input[#securityCode]", self.auth["cvv"])
                 await page.click('button[type="submit"]')
 
                 return True
