@@ -203,14 +203,22 @@ class Woolworths(Supermarket):
 
                 await page.wait_for_timeout(5000)
 
+                # Check if minimum spend requirement is not met
+                minimum_spend_text = await page.get_by_text(
+                    "minimum spend"
+                ).is_visible()
+                if minimum_spend_text:
+                    print("Order doesn't meet $50 minimum spend")
+                    return False
+
                 # Sometimes we might get the forgotten page again
                 # (or for the first time if the drawer was shown previously)
-                forgotten_page = await page.get_by_text(
-                    "Have You Forgotten?"
-                ).is_visible()
-                if forgotten_page:
+                try:
                     await page.click(".continue-button")
                     await page.wait_for_timeout(5000)
+                except Exception as e:
+                    # Ignore if the button is not found
+                    pass
 
                 await page.fill('input[name="txt-cvv_csv"]', self.auth["cvv"])
                 await page.click('button[type="submit"]')
