@@ -182,9 +182,22 @@ class Woolworths(Supermarket):
                 else:
                     time_slots = await page.query_selector_all(".time-slot")
                     if time_slots:
-                        await time_slots[0].click()
-                        await page.wait_for_timeout(5000)
-                        await page.click('button[type="submit"]')
+                        clicked = False
+                        for time_slot in time_slots:
+                            try:
+                                await time_slot.click()
+                                await page.wait_for_timeout(5000)
+                                await page.click('button[type="submit"]')
+                                clicked = True
+                                break
+                            except Exception as e:
+                                print(
+                                    f"Failed to click time slot, trying next one: {str(e)}"
+                                )
+                                continue
+
+                        if not clicked:
+                            raise Exception("Failed to click any delivery time slots")
                     else:
                         raise Exception("No delivery time slots available")
 
